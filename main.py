@@ -1,19 +1,51 @@
 from PIL import Image, ImageDraw
 from PyQt5 import uic
 from PyQt5.QtGui import QImage, QPixmap
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QWidget, QPushButton, QMenuBar, QStatusBar
+from PyQt5.QtCore import QRect, QMetaObject, QCoreApplication
 from random import randint
 import sys
 
 
-class BaseWindow(QMainWindow):
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        if not MainWindow.objectName():
+            MainWindow.setObjectName(u"MainWindow")
+        MainWindow.resize(813, 600)
+        self.centralwidget = QWidget(MainWindow)
+        self.centralwidget.setObjectName(u"centralwidget")
+        self.image = QLabel(self.centralwidget)
+        self.image.setObjectName(u"image")
+        self.image.setGeometry(QRect(10, 0, 791, 521))
+        self.circle_btn = QPushButton(self.centralwidget)
+        self.circle_btn.setObjectName(u"circle_btn")
+        self.circle_btn.setGeometry(QRect(10, 530, 791, 23))
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QMenuBar(MainWindow)
+        self.menubar.setObjectName(u"menubar")
+        self.menubar.setGeometry(QRect(0, 0, 813, 21))
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QStatusBar(MainWindow)
+        self.statusbar.setObjectName(u"statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+
+        QMetaObject.connectSlotsByName(MainWindow)
+    # setupUi
+
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.image.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+        self.circle_btn.setText(QCoreApplication.translate("MainWindow", u"yellow circle 💀", None))
+    # retranslateUi
+
+
+class BaseWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.img = None
-        self.initUI()
-
-    def initUI(self):
-        uic.loadUi('./UI.ui', self)
+        self.setupUi(self)
         self.img_size = (self.image.size().width(), self.image.size().height())
         self.circle_btn.clicked.connect(self.circle)
 
@@ -33,7 +65,7 @@ class BaseWindow(QMainWindow):
         d.ellipse((
             (x - r, y - r),
             (x + r, y + r)
-        ), 'yellow')
+        ), (randint(0, 255), randint(0, 255), randint(0, 255)))
         self.update_image()
 
 
